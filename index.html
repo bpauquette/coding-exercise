@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Appointment Book</title>
+<link rel="stylesheet" type="text/css" href="/css/jquery.datetimepicker.css"/>
+</head>
+<h1>Appointment Book</h1>
+<body  onload="toggle(false)">
+<div id="hideShowCreate">
+<h1>Create Appointment</h1>
+<form action="/cgi-bin/processor.pl" method="post" id="createform" >
+<button type="submit" value="Add">Add</button>
+<button type="button" value="Cancel" onclick="toggle(false)">Cancel</button>
+<br>
+<p>Date and Time: <input type="text" name="datepicker" id="datepicker" required></p>
+<br>
+<!--  <p>Time: <input id="time" type="time"></p> -->
+<br>
+<p>Description: <input type="text" name="description" id="description" required></p>
+</form>
+</div>
+
+<div id="hideShowNew">
+<form action="/cgi-bin/processor.pl" method="post" id="appointmentform">
+<button type="button" value="New" onclick="toggle(true)">New</button><br>
+<input type="text" name="search" id="searchInput">
+<button type="button" value="Search" onclick="getAppointments()">Search</button><br>
+</form>
+</div>
+
+<table id="outputTable"></table>
+<script src="jquery.js">
+<script src="jquery.datetimepicker.js"></script>
+<script src="custom.js"></script>
+</body>
+</html>

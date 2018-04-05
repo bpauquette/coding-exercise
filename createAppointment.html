@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Create New Appointment</title>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+ <script>
+
+</script>
+</head>
+<h1>Create Appointment</h1>
+<form action="/cgi-bin/createAppointment.pl" method="post" id="createform">
+<button type="submit" value="Add"> </button>
+<button type="submit" value="Cancel"></button>
+<br>
+<p>Date: <input type="text" id="datepicker"></p>
+<input id="time" type="time">
+<input type="text" name="description" id="description">
+</form>
+</html>
