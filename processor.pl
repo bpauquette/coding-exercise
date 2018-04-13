@@ -3,7 +3,6 @@ use strict;
 use warnings;
 use CGI;
 use CGI::Log;
-# warn user (from perspective of caller)
 use Carp;
 use Perl::Critic;
 BEGIN {
@@ -30,7 +29,7 @@ open $OUTFILE, '>>', $files
     or croak "Cannot open $files: $OS_ERROR";
 
 # you can check for errors (e.g., if after opening the disk gets full)
-print { $OUTFILE } "Here is your sign......\n"
+print { $OUTFILE } "Call results are here......\n"
     or croak "Cannot write to $files: $OS_ERROR";
 
     
@@ -92,74 +91,43 @@ public class Driver {
 	}
 }
 END
-
-# read the CGI params
-#my @names = $q->param;
-#my $name="";
-#foreach $name ( @names ) { 
-#  if ( $name =~ /\_/ ) { 
-#    next; 
-#  } else { 
-#    print "".$name."\t=\t".$q->param($name) . "\n"; 
-#  }
-#}
-my $search = $q->param("search");
-my $description = $q->param("description");
-my $datepicker =$q->param("datepicker");
-  
-   
-# Create inline java object that imports other java classes  
-my $java_obj = Driver->new();
-if (!defined($search)) {
-  print { $OUTFILE } "Search is undefined\n"
-  or croak "Cannot write to $files: $OS_ERROR";
-
-  $java_obj->setSearchForText("");
-  my $json=$java_obj->getSearchResult();
-  print $json;
-} elsif (defined($search) && $search ne "")
-{ Log->debug("We received a search parameter of ".$search);	
-  $java_obj->setSearchForText($search);
-  my $json=$java_obj->getSearchResult();
-  print $json;
-} elsif($description && $datepicker) {
-       Log->debug("Create parms received");	
+if(!$q->param()) {
+	print { $OUTFILE } "There were no parameters\n";
+	dumphtml();
+} else {
+    my $search = $q->param("search");
+    my $description = $q->param("description");
+    my $datepicker =$q->param("datepicker");  
+    # Create inline java object that imports other java classes  
+    my $java_obj = Driver->new();
+    if (defined($search)) {
+      print { $OUTFILE } "Search is defined and contains $search\n"
+      or croak "Cannot write to $files: $OS_ERROR";
+      if ($search =~ /^ *$/) {
+      	$search='';
+      }
+      $java_obj->setSearchForText($search);
+      my $json=$java_obj->getSearchResult();
+      print $q->header("text/json");
+      print $json;
+    } elsif(defined($description) && defined($datepicker)) {
+       Log->debug("Create parms received were $description and $datepicker");	
        $java_obj->setDescription($description);
        $java_obj->setInputDate($datepicker);
        $java_obj->createAppointment();
-#       my $polite=false;
-#       if (not($polite)) {
-         print $q->redirect('http://localhost');
-#       } else {
-#         print $q->header("text/html");
-#         print $q->start_html('Appointment Confirmed');
-#         print $q->h1("Thank you!");
-#         print $q->p("Your request to add appointment for $description on $datepicker was processed successfully.");
-#         print $q->p('<a href="index.html">Click your heels together three times... There is no place like home</a>');
-#         print $q->end_html;
-#       }
-} else {
-    print { $OUTFILE } "Invalid Input\n"
-    or croak "Cannot write to $files: $OS_ERROR";
-    my( $name, $value );
-    foreach $name ( $q->param ) {
-      print { $OUTFILE } "$name:"
-      or croak "Cannot write to $files: $OS_ERROR";
-   
-      foreach $value ( $q->param( $name ) ) {
-          print { $OUTFILE }"|$value|\n"
-           or croak "Cannot write to $files: $OS_ERROR";
-      }
+       print $q->redirect('http://localhost');
+    } else {
+        dumphtml();
     }
-    dumphtml();
 }   
+
 close $OUTFILE
 or croak "Cannot close $files: $OS_ERROR";
 
 sub dumphtml {
     my $template = snag('index.html');
     print $q->header("text/html");
-    print $q->$template;
+    print $template;
 }
 
 sub snag {
@@ -170,9 +138,6 @@ sub snag {
   close F;
   $template;
 }   
-
- 
-
 
 
 
