@@ -15,10 +15,10 @@ my $OS_ERROR="";
 
 
 # check if the file exists
-if (-f $files) {
-    unlink $files
-        or croak "Cannot delete $files: $!";
-}
+#if (-f $files) {
+#    unlink $files
+#        or croak "Cannot delete $files: $!";
+#}
 
 # use a variable for the file handle
 my $OUTFILE;
@@ -97,7 +97,13 @@ if(!$q->param()) {
 } else {
     my $search = $q->param("search");
     my $description = $q->param("description");
-    my $datepicker =$q->param("datepicker");  
+    my $datepicker =$q->param("datepicker"); 
+#    my $appointmenttime = $q->param("appointmenttime"); 
+    my $hour=$q->param("hour");
+    my $minute=$q->param("minute");
+    my $second=$q->param("second");
+    my $ampm=$q->param("ampm");
+    
     # Create inline java object that imports other java classes  
     my $java_obj = Driver->new();
     if (defined($search)) {
@@ -110,10 +116,17 @@ if(!$q->param()) {
       my $json=$java_obj->getSearchResult();
       print $q->header("text/json");
       print $json;
-    } elsif(defined($description) && defined($datepicker)) {
-       Log->debug("Create parms received were $description and $datepicker");	
+    } elsif(defined($description) && defined($datepicker) && defined($hour) && defined($minute) && defined($second) && defined($ampm)) {
+       print { $OUTFILE } "create parms are defined\n"
+       or croak "Cannot write to $files: $OS_ERROR";
+       if ($ampm eq 'PM') {
+       	  $hour=$hour+12;
+       }
+       my $appointmenttime=$hour.":".$minute.":".$second;
+       print { $OUTFILE } "Create parms received were $description and $datepicker and $appointmenttime\n"
+       or croak "Cannot write to $files: $OS_ERROR";   
        $java_obj->setDescription($description);
-       $java_obj->setInputDate($datepicker);
+       $java_obj->setInputDate($datepicker . ' ' . $appointmenttime);
        $java_obj->createAppointment();
        print $q->redirect('http://localhost');
     } else {

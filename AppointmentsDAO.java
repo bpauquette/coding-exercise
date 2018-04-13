@@ -47,7 +47,7 @@ public class AppointmentsDAO {
 		try {
 			if (conn != null) {
 				conn.close();
-				System.out.println("Connection to SQLite has been terminated.");
+				LOGGER.info("Connection to SQLite has been terminated.");
 			}
 		} catch (SQLException ex) {
 			LOGGER.severe(ex.getMessage());
@@ -196,11 +196,11 @@ public class AppointmentsDAO {
 		
 	}
 	private LocalDateTime stringToLocalDateTime(String str) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
 		return LocalDateTime.parse(str, formatter);	
 	}
 	public String convertDate(LocalDateTime dateTime) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
 		String formattedDateTime = dateTime.format(formatter);  
 		return "'" + formattedDateTime +  "'";
 	}
@@ -243,7 +243,7 @@ public class AppointmentsDAO {
 		} catch (SQLException e) {
 			LOGGER.severe(e.getMessage());
 		}
-	      System.out.println("Dropped table in given database..."); 		
+	    LOGGER.info("Dropped table in given database..."); 		
 	}
 	
 	private String getSQLfromFileSystem(InputStream inputStream) throws IOException {

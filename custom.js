@@ -1,4 +1,4 @@
-$( getAppointments );
+$( getAppointments() );
 
 function show(elementID) {
 	document.getElementById(elementID).style.display="block";
@@ -47,19 +47,42 @@ function zeroPad(number) {
 }
 
 
+function populateHours() {
+var select = '';
+for (i=1;i<=12;i++){
+    select += '<option val=' + zeroPad(i) + '>' + zeroPad(i) + '</option>';
+}
+$('#hour').html(select);
+}
+function populateMinutes() {
+	var select = '';
+	for (i=0;i<=59;i++){
+	    select += '<option val=' + zeroPad(i) + '>' + zeroPad(i) + '</option>';
+	}
+	$('#minute').html(select);
+}
+function populateSeconds() {
+	var select = '';
+	for (i=0;i<=59;i++){
+	    select += '<option val=' + zeroPad(i) + '>' + zeroPad(i) + '</option>';
+	}
+	$('#second').html(select);
+}
+
+
 function loadTable(tableId, data) {
     var rows = '';
     var appointment;
+    rows+="<tr><th>Date</th><th>Time</th><th>Description</th><th>Duration</th></tr>";
     for(i =0;i<data.length;i++){
+    	
     	rows+="<tr>";
     	appointment=data[i];
     	var appointment_id=appointment.appointment_id;
     	/*rows +="<td>";
     	rows += appointment_id;
     	rows +="</td>";  */
-     	rows +="<td>";
-     	rows += appointment.description;
-    	rows +="</td>";
+     	
     	rows +="<td>";
     	rows += appointment.when.date.year;
     	rows += '/';
@@ -74,8 +97,11 @@ function loadTable(tableId, data) {
     	rows += ":";
     	rows += zeroPad(appointment.when.time.second);   	
     	rows +="</td>";
+    	rows +="<td>";
+     	rows += appointment.description;
+    	rows +="</td>";
     	rows += "<td>"
-    	rows +=  " for " + appointment.duration_in_minutes + " minutes" 
+    	rows += appointment.duration_in_minutes + " minutes" 
     	rows += "</td>"    
     	rows +="</tr>";
     }

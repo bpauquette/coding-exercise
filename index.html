@@ -3,35 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <title>Appointment Book</title>
-<link rel="stylesheet" type="text/css" href="/css/jquery.datetimepicker.css"/>
+<link rel="stylesheet" href="jquery-ui.css">
 </head>
 <h1>Appointment Book</h1>
-<body  onload="toggle(false)">
+<body  onload="toggle(false);populateHours();populateMinutes();populateSeconds();">
 <div id="hideShowCreate">
 <h1>Create Appointment</h1>
 <form action="/cgi-bin/processor.pl" method="post" id="createform" >
 <button type="submit" value="Add">Add</button>
 <button type="button" value="Cancel" onclick="toggle(false)">Cancel</button>
 <br>
-<p>Date and Time: <input type="text" name="datepicker" id="datepicker" required></p>
+<p>Date:<input type="text" name="datepicker" id="datepicker" required></p>
 <br>
-<!--  <p>Time: <input id="time" type="time"></p> -->
+<!-- html5 experiments <p>Time:<input id="appointmenttime" name="appointmenttime" type="time" required></p>--> 
+<p>
+Time:
+<select name="hour" id="hour">     
+</select>
+:
+<select name="minute" id="minute">       
+</select>
+:
+<select name="second" id="second">       
+</select>
+<select name="ampm" id="ampm">
+<option value="AM">AM</option>       
+<option value="PM">PM</option>       
+</select>
+</p>
 <br>
 <p>Description: <input type="text" name="description" id="description" required></p>
 </form>
 </div>
 
 <div id="hideShowNew">
-<form action="/cgi-bin/processor.pl" method="post" id="appointmentform">
+<form id="appointmentform">
 <button type="button" value="New" onclick="toggle(true)">New</button><br>
 <input type="text" name="search" id="searchInput">
-<button type="button" value="Search" onclick="getAppointments()">Search</button><br>
+<button type="button" value="Search" onclick="getAppointments()" >Search</button><br>
 </form>
 </div>
 
-<table id="outputTable"></table>
-<script src="jquery.js">
-<script src="jquery.datetimepicker.js"></script>
+<table id="outputTable" border="1"></table>
+<script src="jquery-1.12.4.js"></script>
+<script src="jquery-ui.js"></script>
+<script>
+  $( function() {
+    $( "#datepicker" ).datepicker();
+  } );
+</script>
 <script src="custom.js"></script>
 </body>
 </html>
