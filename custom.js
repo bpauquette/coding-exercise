@@ -25,7 +25,7 @@ function processAjax() {
 	    if (this.readyState == 4 && this.status == 200) {
 	    	    console.log(this.responseText);
 	    	    var jsonData=JSON.parse(this.responseText);  
-	            loadTable('outputTable', ['description', 'when'], jsonData);
+	            loadTable('outputTable', jsonData);
 	    }
 	  };
 	  searchForText=document.getElementById("searchInput").value;
@@ -38,17 +38,47 @@ function getAppointments() {
 	processAjax();
 }
 
+function zeroPad(number) {
+	if (number<10) {
+		return '0' + number;
+	} else {
+		return ''  + number;
+	}
+}
 
-function loadTable(tableId, fields, data) {
-    //$('#' + tableId).empty(); //not really necessary
+
+function loadTable(tableId, data) {
     var rows = '';
-    $.each(data, function(index, item) {
-        var row = '<tr>';
-        $.each(fields, function(index, field) {
-            row += '<td>' + item[field+''] + '</td>';
-        });
-        rows += row + '<tr>';
-    });
+    var appointment;
+    for(i =0;i<data.length;i++){
+    	rows+="<tr>";
+    	appointment=data[i];
+    	var appointment_id=appointment.appointment_id;
+    	/*rows +="<td>";
+    	rows += appointment_id;
+    	rows +="</td>";  */
+     	rows +="<td>";
+     	rows += appointment.description;
+    	rows +="</td>";
+    	rows +="<td>";
+    	rows += appointment.when.date.year;
+    	rows += '/';
+    	rows += zeroPad(appointment.when.date.month);
+    	rows += '/';
+    	rows += zeroPad(appointment.when.date.day);
+    	rows += "</td>";
+        rows += "<td>";
+    	rows += zeroPad(appointment.when.time.hour);
+    	rows += ":";
+    	rows += zeroPad(appointment.when.time.minute);
+    	rows += ":";
+    	rows += zeroPad(appointment.when.time.second);   	
+    	rows +="</td>";
+    	rows += "<td>"
+    	rows +=  " for " + appointment.duration_in_minutes + " minutes" 
+    	rows += "</td>"    
+    	rows +="</tr>";
+    }
     $('#' + tableId).html(rows);
 }
 
